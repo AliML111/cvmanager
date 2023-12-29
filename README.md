@@ -1,4 +1,4 @@
-[![CI](https://github.com/AliML111/cvmanager/actions/workflows/ci.yml/badge.svg)](https://github.com/AliML111/cvmanager/actions/workflows/ci.yml)  ![Docker Image Version (latest semver)](https://img.shields.io/docker/v/cvmanager/img?logo=docker) [![Deployment](https://github.com/AliML111/backend/actions/workflows/cd.yml/badge.svg)](https://github.com/AliML111/cvmanager/actions/workflows/cd.yml)
+[![CI](https://github.com/AliML111/cvmanager/actions/workflows/ci.yml/badge.svg)](https://github.com/AliML111/cvmanager/actions/workflows/ci.yml)  ![Docker Image Version (latest semver)](https://img.shields.io/docker/v/cvmanager/img?logo=docker) [![Deployment](https://github.com/AliML111/cvmanager/actions/workflows/cd.yml/badge.svg)](https://github.com/AliML111/cvmanager/actions/workflows/cd.yml)
 
 
 
