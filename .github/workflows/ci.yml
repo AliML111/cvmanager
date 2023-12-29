@@ -23,9 +23,7 @@ jobs:
         uses: actions/checkout@v4.1.1
 
       - name: Build Docker image
-        run: |
-          cd ./api
-          docker build --build-arg NODE_ENV=development -t cvmanager/img:back-v1.${{ github.run_number }} -t cvmanager/img:back-latest .
+        run: docker build --build-arg NODE_ENV=development -t cvmanager/img:back-v1.${{ github.run_number }} -t cvmanager/img:back-latest .
      
       #- name: Minio run
         #run: |
