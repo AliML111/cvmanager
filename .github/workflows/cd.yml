@@ -1,0 +1,66 @@
+name: CD
+
+on:
+  release:
+    types: [published]
+    
+  workflow_dispatch:
+
+jobs:
+  CD:
+    runs-on: internal-runner 
+    
+    steps:
+      - name: Add env file
+        run: |
+         echo "${{ secrets.ENV_FILE }}" >  ./cv/.env
+         echo "${{ secrets.ENV_MONGO }}" > ./cv/.env_mongo
+         echo "${{ secrets.GOOGLE_APPLICATION_CREDS }}" > ./cv/google-application-credentials.json
+        working-directory: ${{ secrets.WORKDIR }}
+
+      - if: ${{ steps.cache-docker.outputs.cache-hit != 'true' }}
+        name: Cache docker-compose.yaml for deployment
+        id: cache-docker
+        uses: actions/cache@v3.3.2
+        env:
+          cache-name: cache-docker-compose
+        with:
+          path: ./docker-compose.yaml
+          key: docker-compose.yaml
+          restore-keys: |
+           docker-compose.yaml
+           docker-compose
+           docker
+        
+        
+      - name: Pull docker-compose.yaml
+        run: docker compose pull 
+        working-directory: ${{ secrets.WORKDIR }}/cv
+        #run: |
+         # gh extension install actions/gh-actions-cache
+         # gh actions-cache list
+        #uses: actions/download-artifact@v4
+        #with:
+          # Name of the artifact to download.
+          # If unspecified, all artifacts for the run are downloaded.
+          # Optional.
+          #name: docker-compose.yaml
+      
+          # Destination path. Supports basic tilde expansion.
+          # Optional. Default is $GITHUB_WORKSPACE
+          #path: ./docker-compose.yaml
+      
+          # A glob pattern to the artifacts that should be downloaded.
+          # Ignored if name is specified.
+          # Optional.
+          #pattern: ./docker-compose.yaml
+         
+            #- name: Deploy
+              #run: docker compose up -d --pull=always
+              #working-directory: ${{ secrets.WORKDIR }}/cv
+      
+          
+              
+
+           
+           

@@ -1,58 +1,90 @@
 version: "3.9"
 
 services:
-  
+  #-------------------------------------------#
+  #          Cvmanager's API server           #
+  #-------------------------------------------#
   cv_app:
-    #build:
-    #  context: .
-    #  args:
-    #    - NODE_ENV=production
-    image: img:back-latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+       - NODE_ENV=${NODE_ENV:-development}
+    image: digest/img:back-latest
     container_name: cv_app
     env_file:
-      - .env
+      - ./.env
     hostname: cv_app
-    restart: always
-    depends_on:
-      - cv_mongo
-      - cv_redis
+    restart: unless-stopped
     ports:
-      - "3080:3080"
+      - "${CV_PORT:-3080}:3080"
     networks:
       - cv_net
     volumes:
-      - "./public:/app/backend/public"
-      - "./google-application-credentials.json:/app/backend/google-application-credentials.json"
+      - "./data/public:/app/backend/public"
+      # Uncomment the line below if you have your Google application credentials.
+      - "./google-application-credentials.json:/app/backend/google-application-credentials.json:ro"
+    depends_on:
+      cv_mongo:
+        condition: service_healthy
+      cv_redis:
+        condition: service_healthy
   
+  #-------------------------------------------------#
+  #          Cvmanager's MongoDB server             #
+  #-------------------------------------------------#
   cv_mongo:
     container_name: cv_mongo
     hostname: cv_mongo
-    restart: always
-    image: mongo:4.2.23
+    restart: unless-stopped
+    image: mongo:${MONGO_VER:-6.0}
     ports:
-      - "27017:27017"
+      - "${MONGO_PORT:-27017}:27017"
     env_file:
-      - .env_mongo 
+      - ./.env_mongo 
     volumes:
-      - "./mongo_db:/data/db"
+      - "./data/mongo_db:/data/db"
+    command: mongod --bind_ip cv_mongo --port 27017
     networks:
       - cv_net
+    healthcheck:
+        test: mongosh --eval 'db.runCommand("ping").ok' cv_mongo:27017/test --quiet
+        interval: 10s
+        timeout: 5s
+        retries: 10
+        start_period: 5s
 
+  #-------------------------------------------#
+  #         Cvmanager's Redis server          #
+  #-------------------------------------------#
   cv_redis:
     container_name: cv_redis
     hostname: cv_redis
-    image: redis:6.0.16
-    restart: always
-    ports:
-      - "6379:6379"
+    image: redis:${REDIS_VER:-alpine}
+    restart: unless-stopped
     volumes:
-      - "./redis_db:/data"
+      - "./data/redis_db:/data"
+    command: redis-server --replica-ignore-maxmemory yes --replica-serve-stale-data yes  --bind cv_redis --port 6379
+    # --save "32 10000000 64 100000000 128 1000000000"
+    #  #"900 1 300 10 60 10000" 
     networks:
       - cv_net
-      
+    healthcheck:
+        test: redis-cli -h cv_redis -p 6379 --raw incr ping 
+        interval: 10s
+        timeout: 5s
+        retries: 10
+        start_period: 5s
+
+#-------------------------------------------#
+#          Cvmanager's network              #
+#-------------------------------------------#      
 networks:
   cv_net:
+
+#------------------------------------------------#
+#          Cvmanager's Mounted volumes           #
+#------------------------------------------------#
 volumes:
   mongo_db: 
   redis_db: 
- 

@@ -1,16 +1,29 @@
-FROM node:19.4.0-alpine
+#-------------------------------------------#
+#           Downloads dependencies          #
+#-------------------------------------------#
+FROM node:${NODE_IMAGE_VER:-19.4.0-alpine} AS builder
 
 WORKDIR /app/backend
 
+#ENV NODE_ENV development
 ARG NODE_ENV
 
-COPY ./package.json ./
+COPY --chown=node:node ./package.json ./
 
 RUN if [ "$NODE_ENV" = "development" ] ; \
         then npm i ; \
-        else npm i --omit=dev; \
+        else npm i --omit=dev ; \
         fi
         
-COPY . .
+#-------------------------------------------#
+#            Creates the image              #
+#-------------------------------------------#
+FROM node:${NODE_IMAGE_VER:-19.4.0-alpine}
 
-CMD ["npm","start"]
+WORKDIR /app/backend
+
+COPY --chown=node:node --from=builder /app/backend/node_modules ./node_modules
+
+COPY --chown=node:node . .
+
+ENTRYPOINT ["npm","start"]
