@@ -14,7 +14,7 @@ concurrency:
   cancel-in-progress: true
   
 jobs:
-  CI:
+  Build:
     runs-on: ubuntu-latest  
     steps:
       - name: Checkout code
@@ -52,6 +52,7 @@ jobs:
 
   Test:
     runs-on: ubuntu-latest
+    needs: Build
     steps: 
       - name: Add env files
         run: |
@@ -103,18 +104,10 @@ jobs:
            docker-compose.yaml
            docker-compose
            docker
-      #- uses: actions/upload-artifact@v4
-      #  with:
-      #    name: docker-compose.yaml
-      #    path: ./docker-compose.yaml
-
-      #- name: Minio push
-      #  run: |
-      #    docker cp docker-compose.yaml minio:/
-      #    docker exec minio mc cp /docker-compose.yaml env/${{ secrets.BUCKET_DEPLOY }} && docker rm -f minio
-     
+   
   Release:
     runs-on: ubuntu:latest
+    needs: Test
     steps:
       - name: Release the changes
         uses: actions/create-release@v1.1.4
