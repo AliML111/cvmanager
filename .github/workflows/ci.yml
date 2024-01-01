@@ -45,7 +45,7 @@ jobs:
             cvmanager/img:back-v1.${{ github.run_number }}
 
       - name: Upload artifact 
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4.0.0
         with:
           name: docker
           path: /tmp/cvmanager.tar
@@ -63,7 +63,7 @@ jobs:
       - name: Download Docker image from earlier
         uses: actions/download-artifact@v4.1.0
         with:
-          name: docker
+          #name: docker
           path: ./
 
       - name: Load the image
@@ -90,7 +90,7 @@ jobs:
       - name: Download Docker image from earlier
         uses: actions/download-artifact@v4.1.0
         with:
-          name: docker
+          #name: docker
           path: ./
 
       - name: Load the image
