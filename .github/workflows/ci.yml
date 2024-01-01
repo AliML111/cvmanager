@@ -54,6 +54,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: Build
     steps: 
+      - name: Checkout code
+        uses: actions/checkout@v4.1.1
+        
       - name: Add env files
         run: |
          echo "${{ secrets.ENV_FILE }}" > ./.env
@@ -69,6 +72,8 @@ jobs:
       - name: Load the image
         run: |
          ls -la
+         echo "------------------------------"
+         ls -la docker/
          docker load --input ./cvmanager.tar
          docker image ls -a
           
