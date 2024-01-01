@@ -68,6 +68,7 @@ jobs:
 
       - name: Load the image
         run: |
+         ls -la
          docker load --input ./cvmanager.tar
          docker image ls -a
           
