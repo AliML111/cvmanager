@@ -65,16 +65,16 @@ jobs:
       
       - name: Download Docker image from earlier
         uses: actions/download-artifact@v4.1.0
-        with:
+        #with:
           #name: docker
-          path: ./
+          #path: ./
 
       - name: Load the image
         run: |
          ls -la
          echo "------------------------------"
          ls -la docker/
-         docker load --input ./cvmanager.tar
+         docker load --input ./docker/cvmanager.tar
          docker image ls -a
           
       - name: Start Docker Compose
@@ -95,13 +95,13 @@ jobs:
     
       - name: Download Docker image from earlier
         uses: actions/download-artifact@v4.1.0
-        with:
+        #with:
           #name: docker
-          path: ./
+         # path: ./
 
       - name: Load the image
         run: |
-         docker load --input ./cvmanager.tar
+         docker load --input ./docker/cvmanager.tar
          docker image ls -a
          
       - name: Docker login
