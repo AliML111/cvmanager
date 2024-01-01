@@ -64,7 +64,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: docker
-          path: /tmp
+          path: ./
 
       - name: Load the image
         run: |
@@ -91,7 +91,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: docker
-          path: /tmp
+          path: ./
 
       - name: Load the image
         run: |
