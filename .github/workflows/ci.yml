@@ -35,6 +35,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
+          build-args: NODE_ENV=development
           file: ./Dockerfile
           push: false
           outputs: type=docker,dest=/tmp/cvmanager.tar
@@ -129,7 +130,7 @@ jobs:
            docker
    
   Release:
-    runs-on: ubuntu:latest
+    runs-on: ubuntu-latest
     needs: Push
     steps:
       - name: Release the changes
