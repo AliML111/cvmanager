@@ -68,7 +68,7 @@ jobs:
 
       - name: Load the image
         run: |
-         docker load --input /tmp/cvmanager.tar
+         docker load --input ./cvmanager.tar
          docker image ls -a
           
       - name: Start Docker Compose
@@ -95,7 +95,7 @@ jobs:
 
       - name: Load the image
         run: |
-         docker load --input /tmp/cvmanager.tar
+         docker load --input ./cvmanager.tar
          docker image ls -a
          
       - name: Docker login
