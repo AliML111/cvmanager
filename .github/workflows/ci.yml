@@ -38,7 +38,8 @@ jobs:
           build-args: NODE_ENV=development
           file: ./Dockerfile
           push: false
-          outputs: type=docker,dest=/tmp/cvmanager.tar
+          outputs: type=image,name=cvmanager/img:back-latest,oci-mediatypes=true,compression=zstd,compression-level=3,force-compression=true,push=true
+          #type=docker,dest=/tmp/cvmanager.tar
           cache-from: type=gha, scope=${{ github.workflow }}
           cache-to: type=gha, scope=${{ github.workflow }}
           tags: |
